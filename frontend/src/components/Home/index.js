@@ -27,6 +27,13 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      term: "",
+    };
+  }
+
   componentWillMount() {
     const tab = "all";
     const itemsPromise = agent.Items.all;
@@ -38,6 +45,18 @@ class Home extends React.Component {
     );
   }
 
+  componentDidUpdate(_pp, ps, _ss) {
+    if (ps.term !== this.state.term && this.state.term.length >= 3) {
+      const tab = "byTitle";
+      const itemsPromise = agent.Items.byTitle;
+      this.props.onLoad(
+        tab,
+        itemsPromise,
+        Promise.all([agent.Tags.getAll(), itemsPromise(this.state.term)])
+      );
+    }
+  }
+
   componentWillUnmount() {
     this.props.onUnload();
   }
@@ -45,7 +64,10 @@ class Home extends React.Component {
   render() {
     return (
       <div className="home-page">
-        <Banner />
+        <Banner
+          term={this.state.term}
+          setTerm={(val) => this.setState({ term: val })}
+        />
 
         <div className="container page">
           <Tags tags={this.props.tags} onClickTag={this.props.onClickTag} />
