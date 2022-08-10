@@ -8,13 +8,10 @@ const User = require("../models/User");
 const Item = require("../models/Item");
 const Comment = require("../models/Comment");
 
-const seed = async (i) => {
-  i.comments = item.comments.concat([comment]);
-  await i.save();
-};
 let users = [];
 let items = [];
 let comments = [];
+
 const seedUsers = async () => {
   for (let i = 0; i < 100; i++) {
     let u = new User({
@@ -26,6 +23,7 @@ const seedUsers = async () => {
   }
   await User.insertMany(users);
 };
+
 const seedItems = async () => {
   for(let i = 0; i < 100; i++) {
     var x = new Item({ title: i, description: "", tagList: [] });
@@ -34,6 +32,7 @@ const seedItems = async () => {
   }
   await Item.insertMany(items);
 };
+
 const seedComments = async () => {
   for(let i = 0; i < 100; i++) {
     var c = new Comment({ body: "nice" });
@@ -42,9 +41,7 @@ const seedComments = async () => {
     comments.push(c);
   }
   await Comment.insertMany(comments);
-  i.comments = item.comments.concat([comment]);
-  let i = items[0];
-  i.comments = items[0].comments
+  await Item.findOneAndUpdate(items[0]._id, { comments });
 };
 
 seedUsers();
