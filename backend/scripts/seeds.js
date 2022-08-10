@@ -41,7 +41,7 @@ const seedComments = async () => {
     comments.push(c);
   }
   await Comment.insertMany(comments);
-  await Item.findOneAndUpdate(items[0]._id, { comments });
+  await Item.findByIdAndUpdate(items[0]._id, { comments });
 };
 
 seedUsers();
