@@ -21,7 +21,7 @@ const seedUsers = async () => {
     u.setPassword(`${i}`);
     users.push(u);
   }
-  await User.insertMany(users);
+  users = await User.insertMany(users);
 };
 
 const seedItems = async () => {
@@ -30,7 +30,7 @@ const seedItems = async () => {
     x.seller = users[i];
     items.push(x);
   }
-  await Item.insertMany(items);
+  items = await Item.insertMany(items);
 };
 
 const seedComments = async () => {
@@ -40,7 +40,7 @@ const seedComments = async () => {
     c.seller = users[i];
     comments.push(c);
   }
-  await Comment.insertMany(comments);
+  comments = await Comment.insertMany(comments);
   await Item.findByIdAndUpdate(items[0]._id, { comments });
 };
 
