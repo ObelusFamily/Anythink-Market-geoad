@@ -2,48 +2,60 @@
 
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGODB_URI);
-
 const User = require("../models/User");
 const Item = require("../models/Item");
 const Comment = require("../models/Comment");
+
+mongoose.connect(process.env.MONGODB_URI);
 
 let users = [];
 let items = [];
 let comments = [];
 
 const seedUsers = async () => {
-  for (let i = 0; i < 100; i++) {
-    let u = new User({
-      email: `${i}@email.com`,
-      username: i,
-    });
+  for (let i = 0; i < 2; i++) {
+    const u = new User({ email: `${i}@email.com`, username: `${i}` });
     u.setPassword(`${i}`);
     users.push(u);
   }
-  users = await User.insertMany(users);
+  await User.insertMany(users);
 };
 
 const seedItems = async () => {
-  for(let i = 0; i < 100; i++) {
-    var x = new Item({ title: i, description: "", tagList: [] });
+  users = await User.find();
+  for (let i = 0; i < 2; i++) {
+    const x = new Item({
+      title: `${i}`,
+      description: "",
+      tagList: [],
+      image: "",
+    });
     x.seller = users[i];
     items.push(x);
   }
-  items = await Item.insertMany(items);
+  await Item.insertMany(items);
 };
 
 const seedComments = async () => {
-  for(let i = 0; i < 100; i++) {
-    var c = new Comment({ body: "nice" });
+  items = await Item.find();
+  for (let i = 0; i < 2; i++) {
+    const c = new Comment({ body: "nice" });
     c.item = items[0];
     c.seller = users[i];
     comments.push(c);
   }
-  comments = await Comment.insertMany(comments);
-  await Item.findByIdAndUpdate(items[0]._id, { comments });
+  await Comment.insertMany(comments);
+  comments = await Comment.find();
+  console.log(comments, items, users);
+  await Item.findByIdAndUpdate(items[0]._id, {
+    comments: [...items[0].comments, ...comments],
+  });
 };
 
-seedUsers();
-seedItems();
-seedComments();
+const a = async () => {
+  await seedUsers();
+  await seedItems();
+  await seedComments();
+};
+
+a();
