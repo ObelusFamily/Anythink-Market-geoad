@@ -2,11 +2,11 @@
 
 const mongoose = require("mongoose");
 
+mongoose.connect(process.env.MONGODB_URI);
+
 const User = require("../models/User");
 const Item = require("../models/Item");
 const Comment = require("../models/Comment");
-
-mongoose.connect(process.env.MONGODB_URI);
 
 let users = [];
 let items = [];
@@ -45,17 +45,15 @@ const seedComments = async () => {
     comments.push(c);
   }
   await Comment.insertMany(comments);
-  comments = await Comment.find();
-  console.log(comments, items, users);
-  await Item.findByIdAndUpdate(items[0]._id, {
-    comments: [...items[0].comments, ...comments],
-  });
+  comments = await Comment.find().select("");
+  await Item.findByIdAndUpdate(items[0]._id, { comments });
 };
 
 const a = async () => {
   await seedUsers();
   await seedItems();
   await seedComments();
+  mongoose.disconnect();
 };
 
 a();
