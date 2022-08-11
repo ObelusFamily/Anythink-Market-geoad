@@ -13,7 +13,7 @@ let items = [];
 let comments = [];
 
 const seedUsers = async () => {
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 100; i++) {
     const u = new User({ email: `${i}@email.com`, username: `${i}` });
     u.setPassword(`${i}`);
     users.push(u);
@@ -38,7 +38,7 @@ const seedItems = async () => {
 
 const seedComments = async () => {
   items = await Item.find();
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 100; i++) {
     const c = new Comment({ body: "nice" });
     c.item = items[0];
     c.seller = users[i];
