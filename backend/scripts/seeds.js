@@ -23,7 +23,7 @@ const seedUsers = async () => {
 
 const seedItems = async () => {
   users = await User.find();
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 100; i++) {
     const x = new Item({
       title: `${i}`,
       description: "",
